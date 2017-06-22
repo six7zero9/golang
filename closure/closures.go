@@ -10,6 +10,7 @@ func adder() func(int) int {
 	}
 }
 
+// each calls its own adder func and has its own vars
 func main() {
 	pos, neg := adder(), adder()
 	for i := 0; i < 10; i++ {
