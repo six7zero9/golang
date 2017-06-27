@@ -35,5 +35,5 @@ func main() {
 	results := Google("golang")
 	elapsed := time.Since(start)
 	fmt.Println(results)
-	fmt.Println(elapsed)
+	fmt.Printf("About %d results (%v)", len(results), elapsed)
 }
