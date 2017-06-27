@@ -7,9 +7,15 @@ import (
 )
 
 var (
-	web   = simSearch("web")
-	image = simSearch("image")
-	video = simSearch("video")
+	web1   = simSearch("web")
+	web2   = simSearch("web")
+	web3   = simSearch("web")
+	image1 = simSearch("image")
+	image2 = simSearch("image")
+	image3 = simSearch("image")
+	video1 = simSearch("video")
+	video2 = simSearch("video")
+	video3 = simSearch("video")
 )
 
 type Result string
@@ -24,14 +30,31 @@ func simSearch(kind string) Search {
 
 func Google(query string) (results []Result) {
 	c := make(chan Result)
-	go func() { c <- web(query) }()
-	go func() { c <- image(query) }()
-	go func() { c <- video(query) }()
+	go func() { c <- First(query, web1, web2) }()
+	go func() { c <- First(query, image1, image2) }()
+	go func() { c <- First(query, video1, video2) }()
+
+	timeout := time.After(80 * time.Millisecond)
+
 	for i := 0; i < 3; i++ {
-		result := <-c
-		results = append(results, result)
+		select {
+		case result := <-c:
+			results = append(results, result)
+		case <-timeout:
+			fmt.Println("timed out")
+			return
+		}
 	}
-	return
+	return results
+}
+
+func First(query string, replicas ...Search) Result {
+	c := make(chan Result)
+	searchReplica := func(i int) { c <- replicas[i](query) }
+	for i := range replicas {
+		go searchReplica(i)
+	}
+	return <-c
 }
 
 func main() {
