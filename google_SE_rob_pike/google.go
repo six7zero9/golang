@@ -23,9 +23,14 @@ func simSearch(kind string) Search {
 }
 
 func Google(query string) (results []Result) {
-	results = append(results, web(query))
-	results = append(results, image(query))
-	results = append(results, video(query))
+	c := make(chan Result)
+	go func() { c <- web(query) }()
+	go func() { c <- image(query) }()
+	go func() { c <- video(query) }()
+	for i := 0; i < 3; i++ {
+		result := <-c
+		results = append(results, result)
+	}
 	return
 }
 
