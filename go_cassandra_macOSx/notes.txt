@@ -1,0 +1,39 @@
+1. install apache cassandra from http://cassandra.apache.org/
+2. cd to cassandra directory
+3. copy conf dir (cp -r conf/ conf2, cp -r conf/ conf3)
+4. edit each conf directory's cassandra.yml
+
+  conf
+  a. cluster_name
+  b. data_file_directories (/var/lib/cassandra/data -> /var/lib/cassandra/cassandra/data)
+  c. commitlog_directory (var/lib/cassandra/commitlog -> var/lib/cassandra/cassandra/commitlog)
+  d. saved_caches_directory (/var/lib/cassandra/saved_caches -> /var/lib/cassandra/cassandra/saved_caches)
+  e. seed_provider ... seeds "127.0.0.1"
+  f. listen_address should be localhost
+  g. rpc_address should be localhost
+  h. start_rpc should be set to true
+
+  conf2
+  a. cluster_name
+  b. data_file_directories (/var/lib/cassandra/data -> /var/lib/cassandra/cassandra2/data)
+  c. commitlog_directory (var/lib/cassandra/commitlog -> var/lib/cassandra/cassandra/commitlog)
+  d. saved_caches_directory (/var/lib/cassandra/saved_caches -> /var/lib/cassandra/cassandra2/saved_caches)
+  e. seed_provider ... seeds "127.0.0.1"
+  f. listen_address should be 127.0.0.2
+  g. rpc_address should be 127.0.0.2
+  h. start_rpc should be set to true
+
+  conf3
+  a. cluster_name
+  b. data_file_directories (/var/lib/cassandra/data -> /var/lib/cassandra/cassandra3/data)
+  c. commitlog_directory (var/lib/cassandra/commitlog -> var/lib/cassandra/cassandra/commitlog)
+  d. saved_caches_directory (/var/lib/cassandra/saved_caches -> /var/lib/cassandra/cassandra3/saved_caches)
+  e. seed_provider ... seeds "127.0.0.1"
+  f. listen_address should be 127.0.0.3
+  g. rpc_address should be 127.0.0.3
+  h. start_rpc should be set to true
+
+
+5. change JMX_PORT for conf2 (e.g. 7188) and conf3 (e.g. 7177) cassandra-env.sh
+6. change conf log4j.appender.R.File to /var/log/cassandra/cassandra/system.log
+   and log4j.rootLogger to DEBUG.stdout.R
